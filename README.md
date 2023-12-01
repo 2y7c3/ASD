@@ -1,2 +1,2 @@
 # ASD
-Official Code for "Adversarial Score Distillation: When score distillation meets GAN"
+Official Codes for "Adversarial Score Distillation: When score distillation meets GAN"
