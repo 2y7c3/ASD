@@ -46,18 +46,18 @@ Download [finetuned Shap-E](https://huggingface.co/datasets/tiange/Cap3D/tree/ma
 
 ```sh
 # NeRF Training
-python launch.py --config configs/test.yaml --train --gpu 0 system.prompt_processor.prompt="A pineapple"
+python launch.py --config configs/test_nerf.yaml --train --gpu 0 system.prompt_processor.prompt="A delicious hamburger"
 
 # 3D gaussian Training (experimental implementation)
-#python launch.py --config configs/test_gs.yaml --train --gpu 0 system.prompt_processor.prompt="A pineapple"
+#python launch.py --config configs/test_gs.yaml --train --gpu 0 system.prompt_processor.prompt="A delicious hamburger"
 
 # NeRF Tuning
 # you might want to resume training from the certain checkpoint
-python launch.py --config configs/test_tune_nerf.yaml --train --gpu 0 system.prompt_processor.prompt="A pineapple" resume="path/to/ckpt"
+python launch.py --config configs/test_tune_nerf.yaml --train --gpu 0 system.prompt_processor.prompt="A delicious hamburger" resume="path/to/ckpt"
 
 # NeRF Testing 
 # you can change camera parameters on here
-python launch.py --config configs/test_tune_nerf.yaml --test --gpu 0 system.prompt_processor.prompt="A pineapple" resume="path/to/ckpt"
+python launch.py --config configs/test_tune_nerf.yaml --test --gpu 0 system.prompt_processor.prompt="A delicious hamburger" resume="path/to/ckpt"
 ```
 
 ## Todo
