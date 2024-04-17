@@ -1,0 +1,13 @@
+# false a delicious hamburger
+# true a typewriter
+- false a pineapple
+# false a ficus planted in a pot
+# false a freshly baked loaf of sourdough bread on a cutting board
+# true a zoomed out DSLR photo of a baby bunny sitting on top of a stack of pancakes
+# true a DSLR photo of a blue jay standing on a large basket of rainbow macarons
+# true a plush dragon toy
+# false a DSLR photo of a plate piled high with chocolate chip cookies
+# false a DSLR photo of a delicious croissant
+# true a dachsund dressed up in a hotdog costume
+- false A blue tulip
+# false A sliced loaf of fresh bread
