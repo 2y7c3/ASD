@@ -20,143 +20,7 @@ from threestudio.utils.ops import (
     get_rays,
 )
 from threestudio.utils.typing import *
-
 import numpy as np
-
-def safe_normalize(x, eps=1e-20):
-    return x / torch.sqrt(torch.clamp(torch.sum(x * x, -1, keepdim=True), min=eps))
-
-def convert_camera_to_world_transform(transform):
-    # 将右手坐标系的变换矩阵转换为左手坐标系
-    
-    # 复制原始变换矩阵
-    converted_transform = transform.clone()
-    
-    # 反转观察方向（将平移分量的第三个元素乘以-1）
-    converted_transform[:, 2] *= -1
-    
-    # 交换第一行和第三行
-    converted_transform[[0, 2], :] = converted_transform[[2, 0], :]
-    
-    return converted_transform
-
-def circle_poses(device, radius=torch.tensor([3.2]), theta=torch.tensor([60]), phi=torch.tensor([0])):
-
-    theta = theta / 180 * np.pi
-    phi = phi / 180 * np.pi
-
-    centers = torch.stack([
-        radius * torch.sin(theta) * torch.sin(phi),
-        radius * torch.cos(theta),
-        radius * torch.sin(theta) * torch.cos(phi),
-    ], dim=-1) # [B, 3]
-
-    # lookat
-    forward_vector = safe_normalize(centers)
-    up_vector = torch.FloatTensor([0, 1, 0]).to(device).unsqueeze(0).repeat(len(centers), 1)
-    right_vector = safe_normalize(torch.cross(forward_vector, up_vector, dim=-1))
-    up_vector = safe_normalize(torch.cross(right_vector, forward_vector, dim=-1))
-
-    poses = torch.eye(4, dtype=torch.float, device=device).unsqueeze(0).repeat(len(centers), 1, 1)
-    poses[:, :3, :3] = torch.stack((right_vector, up_vector, forward_vector), dim=-1)
-    poses[:, :3, 3] = centers
-
-    return poses
-
-trans_t = lambda t : torch.Tensor([
-    [1,0,0,0],
-    [0,1,0,0],
-    [0,0,1,t],
-    [0,0,0,1]]).float()
-
-rot_phi = lambda phi : torch.Tensor([
-    [1,0,0,0],
-    [0,np.cos(phi),-np.sin(phi),0],
-    [0,np.sin(phi), np.cos(phi),0],
-    [0,0,0,1]]).float()
-
-rot_theta = lambda th : torch.Tensor([
-    [np.cos(th),0,-np.sin(th),0],
-    [0,1,0,0],
-    [np.sin(th),0, np.cos(th),0],
-    [0,0,0,1]]).float()
-
-def rodrigues_mat_to_rot(R):
-  eps =1e-16
-  trc = np.trace(R)
-  trc2 = (trc - 1.)/ 2.
-  #sinacostrc2 = np.sqrt(1 - trc2 * trc2)
-  s = np.array([R[2, 1] - R[1, 2], R[0, 2] - R[2, 0], R[1, 0] - R[0, 1]])
-  if (1 - trc2 * trc2) >= eps:
-    tHeta = np.arccos(trc2)
-    tHetaf = tHeta / (2 * (np.sin(tHeta)))
-  else:
-    tHeta = np.real(np.arccos(trc2))
-    tHetaf = 0.5 / (1 - tHeta / 6)
-  omega = tHetaf * s
-  return omega
-
-def rodrigues_rot_to_mat(r):
-  wx,wy,wz = r
-  theta = np.sqrt(wx * wx + wy * wy + wz * wz)
-  a = np.cos(theta)
-  b = (1 - np.cos(theta)) / (theta*theta)
-  c = np.sin(theta) / theta
-  R = np.zeros([3,3])
-  R[0, 0] = a + b * (wx * wx)
-  R[0, 1] = b * wx * wy - c * wz
-  R[0, 2] = b * wx * wz + c * wy
-  R[1, 0] = b * wx * wy + c * wz
-  R[1, 1] = a + b * (wy * wy)
-  R[1, 2] = b * wy * wz - c * wx
-  R[2, 0] = b * wx * wz - c * wy
-  R[2, 1] = b * wz * wy + c * wx
-  R[2, 2] = a + b * (wz * wz)
-  return R
-
-
-def pose_spherical(theta, phi, radius):
-    c2w = trans_t(radius)
-    c2w = rot_phi(phi/180.*np.pi) @ c2w
-    c2w = rot_theta(theta/180.*np.pi) @ c2w
-    c2w = torch.Tensor(np.array([[-1,0,0,0],[0,0,1,0],[0,1,0,0],[0,0,0,1]])) @ c2w
-    return c2w
-
-def convert_camera_pose(camera_pose):
-    # Clone the tensor to avoid in-place operations
-    colmap_pose = camera_pose.clone()
-
-    # Extract rotation and translation components
-    rotation = colmap_pose[:, :3, :3]
-    translation = colmap_pose[:, :3, 3]
-
-    # Change rotation orientation
-    rotation[:, 0, :] *= -1
-    rotation[:, 1, :] *= -1
-
-    # Change translation position
-    translation[:, 0] *= -1
-    translation[:, 1] *= -1
-
-    return colmap_pose
-
-def convert_camera_pose(camera_pose):
-    # Clone the tensor to avoid in-place operations
-    colmap_pose = camera_pose.clone()
-
-    # Extract rotation and translation components
-    rotation = colmap_pose[:, :3, :3]
-    translation = colmap_pose[:, :3, 3]
-
-    # Change rotation orientation
-    rotation[:, 0, :] *= -1
-    rotation[:, 1, :] *= -1
-
-    # Change translation position
-    translation[:, 0] *= -1
-    translation[:, 1] *= -1
-    
-    return colmap_pose
 
 @dataclass
 class RandomCameraDataModuleConfig:
@@ -264,7 +128,7 @@ class RandomCameraIterableDataset(IterableDataset, Updateable):
             # progressive view
             if self.update_flag == 0:
                 self.progressive_view(global_step)
-            self.update_flag = (self.update_flag + 1) % self.batch_size
+            self.update_flag = (self.update_flag + 1) % 2
 
 
     def __iter__(self):
