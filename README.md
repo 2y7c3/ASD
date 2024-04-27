@@ -1,5 +1,5 @@
 # [CVPR2024] Adversarial Score Distillation: When score distillation meets GAN
-[Arxiv](https://arxiv.org/abs/2312.00739) | [Paper](https://2y7c3.github.io/ASD/pdfs/asd.pdf) | [Project page](https://2y7c3.github.io/ASD/asd.html)
+[Arxiv](https://arxiv.org/abs/2312.00739) | [Paper](https://2y7c3.github.io/pdfs/asd.pdf) | [Project page](https://2y7c3.github.io/ASD/asd.html)
 ---
 
 ## Overview (see Project page for more examples)
