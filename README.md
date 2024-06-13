@@ -68,12 +68,13 @@ python launch.py --config configs/test_tune_nerf.yaml --test --gpu 0 system.prom
 ## Citation
 If you find our work useful in your research, please consider citing:
 ```
-@inproceedings{asd_cvpr_2024,
-    title = {Adversarial Score Distillation: When score distillation meets GAN},
-    author = {Wei, Min and Zhou, Jingkai and Sun, Junyao and Zhang, Xuesong},
+@InProceedings{Wei_2024_CVPR,
+    author    = {Wei, Min and Zhou, Jingkai and Sun, Junyao and Zhang, Xuesong},
+    title     = {Adversarial Score Distillation: When score distillation meets GAN},
     booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-    month = {June},
-    year = {2024}
+    month     = {June},
+    year      = {2024},
+    pages     = {8131-8141}
 }
 ```
 
