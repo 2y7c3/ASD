@@ -1,6 +1,8 @@
 # [CVPR2024] Adversarial Score Distillation: When score distillation meets GAN
 [Arxiv](https://arxiv.org/abs/2312.00739) | [Paper](https://2y7c3.github.io/pdfs/asd.pdf) | [Project page](https://2y7c3.github.io/ASD/asd.html)
 ---
+### 🎉 We released the training codes using 3DGS. 
+ 💡 Tips: Camera parameters are crucial for the final results for 3DGS.
 
 ## Overview (see Project page for more examples)
 Generated 3D NeRFs
@@ -19,11 +21,11 @@ git clone https://github.com/2y7c3/ASD
 cd ASD
 
 ### for 3D Gaussian Splatting
-#git clone --recursive https://github.com/YixunLiang/diff-gaussian-rasterization
-#pip install ./diff-gaussian-rasterization
+git clone --recursive https://github.com/YixunLiang/diff-gaussian-rasterization
+pip install ./diff-gaussian-rasterization
 
-#git clone https://github.com/YixunLiang/simple-knn.git
-#pip install ./simple-knn
+git clone https://github.com/YixunLiang/simple-knn.git
+pip install ./simple-knn
 
 pip install -r requirements.txt
 ```
@@ -48,21 +50,21 @@ Download [finetuned Shap-E](https://huggingface.co/datasets/tiange/Cap3D/tree/ma
 # NeRF Training
 python launch.py --config configs/test_nerf.yaml --train --gpu 0 system.prompt_processor.prompt="A delicious hamburger"
 
-# 3D gaussian Training (experimental implementation)
-#python launch.py --config configs/test_gs.yaml --train --gpu 0 system.prompt_processor.prompt="A delicious hamburger"
+3D gaussian Training (experimental implementation)
+python launch.py --config configs/test_gs.yaml --train --gpu 0 system.prompt_processor.prompt="A delicious hamburger"
 
-# NeRF Tuning
+# Tuning
 # you might want to resume training from the certain checkpoint
-python launch.py --config configs/test_tune_nerf.yaml --train --gpu 0 system.prompt_processor.prompt="A delicious hamburger" resume="path/to/ckpt"
+python launch.py --config configs/test_tune_{nerf or gs}.yaml --train --gpu 0 system.prompt_processor.prompt="A delicious hamburger" resume="path/to/ckpt"
 
-# NeRF Testing 
+# Testing 
 # you can change camera parameters on here
-python launch.py --config configs/test_tune_nerf.yaml --test --gpu 0 system.prompt_processor.prompt="A delicious hamburger" resume="path/to/ckpt"
+python launch.py --config configs/test_tune_{nerf or gs}.yaml --test --gpu 0 system.prompt_processor.prompt="A delicious hamburger" resume="path/to/ckpt"
 ```
 
 ## Todo
 - [x] Release the training codes for NeRF
-- [-] Release the training codes for 3DGS
+- [x] Release the training codes for 3DGS
 - [ ] Release the training codes for 2D images and image editing
 
 ## Citation
