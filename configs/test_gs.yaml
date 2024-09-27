@@ -1,0 +1,150 @@
+name: "debug_gs_2"
+tag: "${rmspace:${system.prompt_processor.prompt},_}"
+exp_root_dir: "outputs"
+seed: 0
+
+data_type: "random-camera-datamodule-gs"
+data:
+  batch_size: 2
+  width: 512
+  height: 512
+  camera_distance_range: [5.2, 6.5] #[5.2, 5.5] #[1.5, 2.5]
+  fovy_range: [0.32, 0.66] #[60, 70]
+  elevation_range: [-10, 45] #[-20, 45]
+  light_sample_strategy: "dreamfusion"
+  eval_camera_distance:  6.0 #3.5 #1.8
+  eval_fovy_deg: 0.55 #0.55
+
+  eval_height: 512
+  eval_width: 512
+  eval_elevation_deg: 10
+  #rays_d_normalize: false
+
+  azimuth_range: [10, 170] #[-80, 80] 90 is front, -90 is back  ###[-180, 180]
+  max_azimuth_range: [-90, 270]
+  max_fovy_range: [0.32, 0.66] #[0.24, 0.60]
+  max_camera_distance_range: [5.2, 6.5]
+  
+  fovy_scale_up_factor: [0.75, 1.1]
+  phi_scale_up_factor: 40 #1.5
+
+  rand_cam_gamma: 1.5
+  camera_perturb: 0.05
+  center_perturb: 0.05
+  up_perturb: 0.01
+
+system_type: "gaussian-splatting-system-asd"
+system:
+
+  guidance_eval: true
+  warmup_iter: 3000 #1500
+
+  geometry_type: "gaussian-splatting"
+  geometry:
+    iterations: 16000
+    max_num: 3000000 #500000
+    #position_lr: [0, 0.00005, 0.0000025, 30000] ##exp
+    position_lr_init: 0.00005
+    position_lr_final: 0.0000025 #0.000025
+    position_lr_delay_mult: 0.5
+    #position_lr_max_steps: 30_000
+    scaling_lr: 0.005
+    feature_lr: 0.005
+    opacity_lr: 0.01
+    rotation_lr: 0.001
+
+    scaling_lr_final: 0.0005 #0.001
+    rotation_lr_final: 0.0001 #0.0002 
+    feature_lr_final: 0.0015 #0.0030
+
+    densification_interval: 100 #100
+    prune_interval: 100
+    opacity_reset_interval: 300 #300
+    densify_from_iter: 100
+    densify_until_iter: 3000 #${trainer.max_steps}
+    prune_from_iter: 4000
+    prune_until_iter: 16000 #${trainer.max_steps}
+    densify_grad_threshold: 0.02
+    min_opac_prune: 0.005 #0.005
+    percent_dense: 0.01
+    #split_thresh: 0.035 #0.01*extent
+    #scaling_thresh: 0.35 #0.1*extent
+
+    init_num_pts: 100000
+    pc_init_radius: 0.8
+    opacity_init: 0.1
+
+    geometry_convert_from: "shape-e"
+    init_prompt: "A man head."
+    prune_size: 0.2
+
+  renderer_type: "diff-gaussian-rasterizer-advanced"
+  renderer:
+    debug: false
+    invert_bg_prob: 0. #0.5
+    bg_aug_ratio: 0.66
+
+  material_type: "no-material" # unused
+  material:
+    n_output_dims: 0
+
+  background_type: "solid-color-background" # unused
+
+  prompt_processor_type: "stable-diffusion-prompt-processor"
+  prompt_processor:
+    use_perp_neg: True
+    pretrained_model_name_or_path: "stabilityai/stable-diffusion-2-1-base"
+    prompt: ???
+
+  guidance_type: "stable-diffusion-asd-guidance"
+  guidance:
+    pretrained_model_name_or_path: "stabilityai/stable-diffusion-2-1-base"
+    pretrained_model_name_or_path_lora: "stabilityai/stable-diffusion-2-1"
+    guidance_scale: 7.5
+    min_step_percent: 0.02
+    max_step_percent: 0.5 #[5000, 0.98, 0.5, 5001]
+    enable_memory_efficient_attention: true
+    half_precision_weights: False
+    weighting_strategy: asd
+
+
+    gamma: -0.75
+    lora_n_timestamp_samples: 1
+
+  #exporter_type: "gaussian-mesh-exporter"
+
+  loggers:
+    wandb:
+      enable: false
+      project: 'threestudio'
+      name: None
+
+  loss:
+    lambda_asd: 0.1
+    lambda_lora: 1.0
+    lambda_position: 0.0 #1.0
+    lambda_opacity: 0.0 #0.0001
+    lambda_scales: 1.0
+    lambda_tv: 1.0
+  
+  optimizer:
+    name: Adam
+    args:
+      betas: [0.9, 0.99]
+      eps: 1.e-15
+    params:
+      guidance:
+        lr: 0.0001
+
+trainer:
+  max_steps: 32000 #16000
+  log_every_n_steps: 1
+  num_sanity_val_steps: 0
+  val_check_interval: 200
+  enable_progress_bar: true
+  precision: 32-true
+
+checkpoint:
+  save_last: true # save at each validation time
+  save_top_k: -1
+  every_n_train_steps: 5000 #${trainer.max_steps}

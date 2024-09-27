@@ -5,5 +5,5 @@ from . import (
     implicit_volume,
     tetrahedra_sdf_grid,
     volume_grid,
-    #gaussian_base,
+    gaussian_base,
 )
