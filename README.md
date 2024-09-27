@@ -2,7 +2,7 @@
 [Arxiv](https://arxiv.org/abs/2312.00739) | [Paper](https://2y7c3.github.io/pdfs/asd.pdf) | [Project page](https://2y7c3.github.io/ASD/asd.html)
 ---
 ### 🎉 We released the training codes using 3DGS. 
- 💡 Tips: Camera parameters are crucial for the final results for 3DGS.
+ 💡 Tips: Camera parameters are crucial for the final results of 3DGS.
 
 ## Overview (see Project page for more examples)
 Generated 3D NeRFs
