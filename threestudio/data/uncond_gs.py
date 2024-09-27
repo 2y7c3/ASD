@@ -170,6 +170,11 @@ class RandomCameraIterableDataset(IterableDataset, Updateable):
         self.cfg.azimuth_range[0] = max(self.cfg.max_azimuth_range[0] , self.cfg.azimuth_range[0] - self.cfg.phi_scale_up_factor)
         self.cfg.azimuth_range[1] = min(self.cfg.max_azimuth_range[1], self.cfg.azimuth_range[1] + self.cfg.phi_scale_up_factor)
         
+        self.fovy_range = self.cfg.fovy_range
+        self.camera_distance_range = self.cfg.camera_distance_range
+        self.elevation_range = self.cfg.elevation_range
+        self.azimuth_range = self.cfg.azimuth_range
+        
         print('scale up elevation_range to:', self.cfg.elevation_range)
         print('scale up camera_distance_range to:', self.cfg.camera_distance_range)
         print('scale up azimuth_range to:', self.cfg.azimuth_range)
