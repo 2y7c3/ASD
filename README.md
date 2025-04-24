@@ -7,11 +7,11 @@
 ## Overview (see Project page for more examples)
 Generated 3D NeRFs
 <div align=center>
-<img src="https://2y7c3.github.io/imgs/ex7.gif" width="45%"></img><img src="https://2y7c3.github.io/imgs/ex10.gif" width="45%"></img>
+<img src="https://2y7c3.github.io/ASD/imgs/ex7.gif" width="45%"></img><img src="https://2y7c3.github.io/ASD/imgs/ex10.gif" width="45%"></img>
 </div>
 Generated 3D Gaussians
 <div align=center>
-<img src="https://2y7c3.github.io/imgs/gs5.gif" width="25%"></img><img src="https://2y7c3.github.io/imgs/gs1.gif" width="25%"></img>
+<img src="https://2y7c3.github.io/ASD/imgs/gs5.gif" width="25%"></img><img src="https://2y7c3.github.io/ASD/imgs/gs1.gif" width="25%"></img>
 </div>
 
 ## Installation
